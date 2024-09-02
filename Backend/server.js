@@ -5,6 +5,19 @@ const port = 8080;
 require("dotenv").config();
 const mongoose = require("mongoose");
 const mongo_URL = process.env.MONGO_URL;
+const userRouter = require("./Routes/userRoutes");
+const cors = require("cors");
+
+
+const corsOptions = {
+  origin: "http://localhost:5173/",
+  methods: ["POST", "GET", "PUT", "DELETE"],
+  headers: ["Content-Type", "Authorizatioin"],
+  credentials: true
+}
+
+app.use(cors(corsOptions));
+
 
 main()
 .then(() => console.log("Database connected ")
@@ -15,8 +28,10 @@ async function main() {
   await mongoose.connect(String(mongo_URL));
 }
 
+app.use(express.json());
 
-
+//user routes
+app.use("/user",userRouter);
 
 app.get("/", (req, res) => {
     res.send("server works fine !!!");

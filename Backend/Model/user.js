@@ -18,8 +18,8 @@ const userSchema = new Schema({
     },
     userImage: {
         type: String,
-        default: avatar
-    }
+        default: "https://i.pinimg.com/236x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"
+    },
 });
 
 const User = mongoose.model("User", userSchema);
