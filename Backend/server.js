@@ -6,6 +6,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const mongo_URL = process.env.MONGO_URL;
 const userRouter = require("./Routes/userRoutes");
+const postRouter = require("./Routes/postRoutes");
 const cors = require("cors");
 
 
@@ -32,6 +33,9 @@ app.use(express.json());
 
 //user routes
 app.use("/user",userRouter);
+
+//post routes
+app.use("/post", postRouter);
 
 app.get("/", (req, res) => {
     res.send("server works fine !!!");

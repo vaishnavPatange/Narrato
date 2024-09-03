@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const default_image = "Backend\images\default_blog_image.png"
+const default_image = "https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png"
 
 const postSchema = new Schema({
     title: {
