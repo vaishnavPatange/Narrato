@@ -4,9 +4,17 @@ const User = require("../Model/user");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
 
-router.post("/login", passport.authenticate("local"),async (req, res) => {
-    console.log(req.body);
-    
+
+router.get("/current", async(req, res) => {
+    if(req.isAuthenticated()){
+        return res.status(200).json({success:true, userData:req.user})
+    } else{
+        return res.status(401),json({success:false, message:"No user found"})
+    }
+});
+
+
+router.post("/login", passport.authenticate("local"), async(req, res) => {
     return res.status(200).json({success:true, message:"user logged in successfully!"});
 });
 
