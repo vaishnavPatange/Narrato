@@ -2,32 +2,39 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const User = require("../Model/user");
 const wrapAsync = require("../utils/wrapAsync");
+const passport = require("passport");
 
-router.post("/login", wrapAsync(async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email })
-    if (user) {
-        if (user.password === password) {
-            return res.status(200).json({ success: true });
-        } else {
-            return res.json({ success: false, message: "Invalid Credentials" });
-        }
-    }
-    return res.json({ succes: false, message: "User not Found !!!" });
-}));
+router.post("/login", passport.authenticate("local"),async (req, res) => {
+    console.log(req.body);
+    
+    return res.status(200).json({success:true, message:"user logged in successfully!"});
+});
 
 
 router.post("/new", wrapAsync(async (req, res) => {
-    const { name,username, email, password, userImage } = req.body;
+    const { username, email, password, userImage } = req.body;
+    console.log(req.body);
+    
     const newUser = new User({
-        name: name,
-        username: email,
+        username: username,
+        email: email,
         userImage: userImage
     });
     await User.register(newUser, password);
     return res.status(200).json({ success: true, message: "User Registered successfully!" })
 
 }));
+
+
+router.get("/logout", (req, res) => {
+    req.logout((err) => {
+        if(err){
+            next(err);
+        } else{
+            return res.status(200).json({success:true, message:"User logged out successfully !"});
+        }
+    });
+});
 
 
 module.exports = router;

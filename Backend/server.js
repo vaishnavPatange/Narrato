@@ -12,11 +12,19 @@ const localStrategy = require("passport-local");
 const User = require("./Model/user");
 const ExpressError = require("./utils/ExpressError");
 
+main()
+.then(() => console.log("Database connected ")
+)
+.catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect(String(conf.mongoUrl));
+}
 
 const corsOptions = {
   origin: String(conf.cors_origin),
   methods: ["POST", "GET", "PUT", "DELETE"],
-  headers: ["Content-Type", "Authorizatioin"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }
 app.use(cors(corsOptions));
@@ -33,21 +41,7 @@ const sessionOpt = {
 }
 
 
-
-
-
-
-main()
-.then(() => console.log("Database connected ")
-)
-.catch(err => console.log(err));
-
-async function main() {
-  await mongoose.connect(String(conf.mongoUrl));
-}
-
-
-//expression session
+//express session
 app.use(session(sessionOpt));
 
 //passport usage
@@ -67,8 +61,9 @@ app.use("/user",userRouter);
 //post routes
 app.use("/post", postRouter);
 
-app.get("/", (req, res) => {
-    res.send(`server works fine !!!`);
+
+app.all("*", (req, res, next) => {
+  next(new ExpressError(404, "page not found"));
 })
 
 app.use((err, req, res, next) => {
