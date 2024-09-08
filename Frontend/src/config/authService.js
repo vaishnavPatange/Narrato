@@ -1,7 +1,7 @@
 import {expressUrl} from "../conf/conf";
 import axios from "axios";
 
-class AuthService{
+export class AuthService{
 
     async signup({username, email, password, userImage = "https://i.pinimg.com/236x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"}){
         try {

@@ -1,7 +1,7 @@
 import {expressUrl} from "../conf/conf";
 import axios from "axios";
 
-class PostService{
+export class PostService{
     
     async getAllPosts(){
         try{
