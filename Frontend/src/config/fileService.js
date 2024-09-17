@@ -15,7 +15,7 @@ export class FileService{
     }
 
 
-    async uploadFile({name, file}){
+    async uploadFile({name = "post", file}){
         
         let imageId = this.conf.appwritePostId;
         if(name === "user") imageId = this.conf.appwriteUserId;
@@ -31,7 +31,7 @@ export class FileService{
         }
     }
 
-    async deleteFile({name,file_id}){
+    async deleteFile({name = "post",file_id}){
         let imageId = this.conf.appwritePostId;
         if(name === "user") imageId = this.conf.appwriteUserId;
 
@@ -47,7 +47,7 @@ export class FileService{
         }
     }
 
-    async filePreview({name, file_id}){
+    async filePreview({name = "post", file_id}){
         let imageId = this.conf.appwritePostId;
         if(name === "user") imageId = this.conf.appwriteUserId;
 
