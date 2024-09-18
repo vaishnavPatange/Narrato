@@ -3,6 +3,7 @@ import { Input, Logo, Button } from "./index";
 import authService from '../config/authService';
 import { login as authLogin } from "../store/authSlice";
 import authService from '../config/authService';
+import fileService from "../config/fileService";
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from 'react-redux';
 import useForm from "react-hook-form";
@@ -16,6 +17,9 @@ function Signup() {
     const signup = async (data) => {
         setError("")
         try {
+
+            if(data.image[0]) await fileService.uploadFile(name="user", data.image[0])
+
             const createdUser = await authService.signup(data);
             if (createdUser) {
                 const currUser = await authService.getCurrUser();
@@ -73,6 +77,13 @@ function Signup() {
                                 required:"Password is required"
                             })}
                         />
+                        <Input 
+                            label="Add your photo"
+                            type="file"
+                            accept="image/jpg, image/png, image/jpeg, image/gif"
+                            {...register("userImage")}
+                        />
+
                         <Button 
                             children="Signup"
                             type="submit"

@@ -9,6 +9,9 @@ import Button from "./Button";
 import Select from "./Select";
 import Signup from "./Signup";
 import Login from "./Login";
+import PostForm from "./post-form/PostFrom";
+import Protected from "./AuthLayout";
+import PostCard from "./PostCard";
 
 export{
     Container,
@@ -21,6 +24,9 @@ export{
     Button,
     Select,
     Signup,
-    Login
+    Login,
+    PostForm,
+    Protected,
+    PostCard
     
 }

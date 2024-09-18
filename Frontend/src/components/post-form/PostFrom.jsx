@@ -40,7 +40,7 @@ function PostFrom({post}) {
           const fileID = file.$id;
           data.image = fileID;
 
-          const createdPost = await postService.addPost({...data});
+          const createdPost = await postService.addPost({...data, user:userData._id});
           if(createdPost.success) navigate(`/post/${createdPost._id}`); 
 
         }
