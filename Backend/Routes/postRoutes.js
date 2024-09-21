@@ -24,6 +24,14 @@ router.post("/add", isLoggedIn, wrapAsync(async (req, res) => {
     return res.status(201).json({ success: true, message: "Post created successfully", post: newPost });
 }));
 
+router.post("/post/:id",isLoggedIn,wrapAsync(async(req, res) => {
+    const {_id} = req.params;
+    const reqPost = Post.findById(_id);
+    if(post){
+        return res.staus(200).json({success:true, post:reqPost})
+    }
+}));
+
 
 router.put("/edit/:id", isLoggedIn, wrapAsync(async (req, res) => {
     const { id } = req.params;

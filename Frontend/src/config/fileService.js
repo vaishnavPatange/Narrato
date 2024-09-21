@@ -40,7 +40,7 @@ export class FileService{
                 imageId,
                 file_id
             )
-            return true
+            return {success: true}
         } catch(error){
             console.log("Appwrite serive :: deleteFile :: error", error);
             return false

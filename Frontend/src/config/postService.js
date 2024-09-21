@@ -48,16 +48,28 @@ export class PostService{
         }
     }
 
-    async deletePost({post_id}){
+    async deletePost({_id}){
         try {
-           const deletedPost =  await axios.delete(`${expressUrl}/post/delete/:${post_id}`);
+           const deletedPost =  await axios.delete(`${expressUrl}/post/delete/:${_id}`);
            if(deletedPost.data.success){
-            return deletedPost.data.message
+            return deletedPost.data.success
            }
         } catch (error) {
             return error.response ? error.response.data : error.message;
         }
     }
+
+    async getPost({_id}){
+        try {
+            const reqPost = await axios.post(`${expressUrl}/post/:${_id}`);
+            if(reqPost.success){
+                return reqPost.post;
+            }
+        } catch (error) {
+            return error.response ? error.response.data : error.message;
+        }
+    }
+
 }
 
 const postService = new PostService();
