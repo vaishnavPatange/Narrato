@@ -18,22 +18,22 @@ function Header() {
     },
     {
       nav: 'login',
-      add: '/login',
+      add: '/user/login',
       active: !authStatus
     },
     {
       nav: 'signup',
-      add: '/signup',
+      add: '/user/new',
       active: !authStatus
     },
     {
       nav: 'All Posts',
-      add: '/all-posts',
+      add: '/post/all-posts',
       active: authStatus
     },
     {
       nav: 'Add Post',
-      add: '/add-post',
+      add: '/post/add-post',
       active: authStatus
     },
   ]
@@ -47,14 +47,16 @@ function Header() {
               <Logo />
             </Link>
           </div>
-          <ul className='ml-auto flex'>
+          <ul className='flex ml-auto'>
             {
               navItems.map((item) => (
                 item.active ? (
                   <li key={item.nav}>
                     <button onClick={() => {
                       navigate(item.add)
-                    }}>
+                    }}
+                    className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
+                    >
                       {item.nav}
                     </button>
                   </li>

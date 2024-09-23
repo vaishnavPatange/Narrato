@@ -1,11 +1,12 @@
-import {expressUrl} from "../conf/conf";
+import conf from "../conf/conf.js";
 import axios from "axios";
 
 export class AuthService{
 
     async signup({username, email, password, userImage = "https://i.pinimg.com/236x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"}){
         try {
-            const newUser = await axios.post((`${expressUrl}/user/new`), {
+            console.log(username," ", email, " ", password , " ", userImage);
+            const newUser = await axios.post(`http://localhost:8080/user/new`, {
                 username: username,
                 email:email,
                 password:password,
@@ -21,7 +22,7 @@ export class AuthService{
 
     async getCurrUser(){
         try {
-            const currUser = await axios.get(`${expressUrl}/user/current`);
+            const currUser = await axios.get(`${conf.expressUrl}/user/current`);
             return currUser.userData
         } catch (error) {
             return error.response ? error.response.data : error.message;
@@ -30,12 +31,12 @@ export class AuthService{
 
     async login({username, password}){
         try {
-            const loginUser = await axios.post((`${expressUrl}/user/login`),{
+            const loginUser = await axios.post((`http://localhost:8080/user/login`),{
                 username:username,
                 password:password
             })
             if(loginUser.data.success){
-                return loginUser.data.message
+                return 
             }
         } catch (error) {
             return error.response ? error.response.data : error.message;
@@ -44,7 +45,7 @@ export class AuthService{
 
     async logout(){
         try {
-           const logoutUser = await axios.get((`${expressUrl}/user/logout`))
+           const logoutUser = await axios.get((`${conf.expressUrl}/user/logout`))
            if(logoutUser.success){
             return logoutUser.data.message
            }

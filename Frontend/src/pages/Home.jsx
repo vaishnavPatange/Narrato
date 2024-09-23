@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 function Home() {
 
     const [posts, setPosts] = useState([]);
-    const userStatus = useSelector((state) => state.userData.status);
+    const userStatus = useSelector((state) => state.status);
 
     useEffect(() => {
         if(userStatus){

@@ -1,11 +1,11 @@
-import {expressUrl} from "../conf/conf";
+import conf from "../conf/conf";
 import axios from "axios";
 
 export class PostService{
     
     async getAllPosts(){
         try{
-            const allPosts = await axios.post(`${expressUrl}/post/all`);
+            const allPosts = await axios.post(`${conf.expressUrl}/post/all`);
             return allPosts
         }catch(error){
             return error.response ? error.response.data : error.message;
@@ -14,7 +14,7 @@ export class PostService{
 
     async addPost({ title, slug, image, content, status, user }){
         try {
-            const addedPost = await axios.post(`${expressUrl}/post/add`,{
+            const addedPost = await axios.post(`${conf.expressUrl}/post/add`,{
                 title:title,
                 slug:slug,
                 image:image,
@@ -32,7 +32,7 @@ export class PostService{
 
     async editPost({ title, slug, image, content, status, _id }){
         try {
-            const editedPost = await axios.put(`${expressUrl}/post/edit/:${_id}`, {
+            const editedPost = await axios.put(`${conf.expressUrl}/post/edit/:${_id}`, {
                 title:title,
                 slug:slug,
                 image:image,
@@ -50,7 +50,7 @@ export class PostService{
 
     async deletePost({_id}){
         try {
-           const deletedPost =  await axios.delete(`${expressUrl}/post/delete/:${_id}`);
+           const deletedPost =  await axios.delete(`${conf.expressUrl}/post/delete/:${_id}`);
            if(deletedPost.data.success){
             return deletedPost.data.success
            }
@@ -61,7 +61,7 @@ export class PostService{
 
     async getPost({_id}){
         try {
-            const reqPost = await axios.post(`${expressUrl}/post/:${_id}`);
+            const reqPost = await axios.post(`${conf.expressUrl}/post/:${_id}`);
             if(reqPost.success){
                 return reqPost.post;
             }

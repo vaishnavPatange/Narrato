@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import { Input, Button, Logo } from "./index";
 import { login as authLogin } from "../store/authSlice";
 import authService from '../config/authService';
@@ -38,7 +38,7 @@ function Login() {
         <p className="mt-2 text-center text-base text-black/60">
           Don&apos;t have any account?&nbsp;
           <Link
-            to="/signup"
+            to="/user/new"
             className="font-medium text-primary transition-all duration-200 hover:underline"
           >
             Sign Up

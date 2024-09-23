@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Input, Logo, Button } from "./index";
 import authService from '../config/authService';
 import { login as authLogin } from "../store/authSlice";
-import authService from '../config/authService';
 import fileService from "../config/fileService";
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from 'react-redux';
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 
 function Signup() {
 
@@ -17,10 +16,11 @@ function Signup() {
     const signup = async (data) => {
         setError("")
         try {
+            if (data.userImage && data.userImage[0]) {
+                await fileService.uploadFile("user", { file: data.userImage[0] });
+            }
 
-            if(data.image[0]) await fileService.uploadFile(name="user", data.image[0])
-
-            const createdUser = await authService.signup(data);
+            const createdUser = await authService.signup({...data});
             if (createdUser) {
                 const currUser = await authService.getCurrUser();
                 if (currUser) dispatch(authLogin(currUser));
@@ -43,7 +43,7 @@ function Signup() {
                 <p className="mt-2 text-center text-base text-black/60">
                     Already have an account?&nbsp;
                     <Link
-                        to="/login"
+                        to="/user/login"
                         className="font-medium text-primary transition-all duration-200 hover:underline"
                     >
                         Sign In

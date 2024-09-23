@@ -1,4 +1,4 @@
-const conf = {
+ const conf = {
     expressUrl: String(import.meta.env.EXPRESS_URL),
     appwriteUrl:String(import.meta.env.APPWRITE_URL),
     appwriteProjectId:String(import.meta.env.APPWRITE_PROJECT_ID),

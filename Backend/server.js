@@ -22,7 +22,7 @@ async function main() {
 }
 
 const corsOptions = {
-  origin: String(conf.cors_origin),
+  origin: String("http://localhost:5173"),
   methods: ["POST", "GET", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true

@@ -15,7 +15,8 @@ router.get("/current", async(req, res) => {
 
 
 router.post("/login", passport.authenticate("local"), async(req, res) => {
-    return res.status(200).json({success:true, message:"user logged in successfully!"});
+    console.log(req.body)
+    return res.status(200).json({success:true});
 });
 
 
