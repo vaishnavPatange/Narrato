@@ -1,21 +1,67 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const passportLocalMongoose = require("passport-local-mongoose");
+const {Schema} = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 
 const userSchema = new Schema({
-    email:{
-        type:String,
-        required:true
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
     },
     userImage: {
         type: String,
-        default: "https://i.pinimg.com/236x/d9/7b/bb/d97bbb08017ac2309307f0822e63d082.jpg"
+        required: true
     },
+    password: {
+        type: String,
+        required: true
+    },
+    refreshToken: {
+        type: String,
+        requird: true
+    }
+}, { timestamps: true });
+
+userSchema.pre("save", async function(next){
+    if(!this.isModified(password)) return next();
+
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
 });
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.methods.isPasswordCorrect = async function(password){
+    return await bcrypt.compare(password, this.password);
+}
 
-const User = mongoose.model("User", userSchema);
+userSchema.methods.generateAccessToken = function(){
+    return jwt.sign(
+        {
+            _id: this._id,
+            name: this.name,
+            email: this.email
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
 
-module.exports = User;
+userSchema.methods.generateRefreshToken = function(){
+    return jwt.sign(
+        {
+            _id: this._id
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+
+export const User = mongoose.model("User", userSchema);
