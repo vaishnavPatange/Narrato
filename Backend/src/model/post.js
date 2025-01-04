@@ -1,22 +1,19 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const default_image = "https://www.contentviewspro.com/wp-content/uploads/2017/07/default_image.png"
+const mongooseAggregatePagination = require("mongoose-aggregate-paginate-v2");
 
 const postSchema = new Schema({
     title: {
         type: String,
-        required: true,
-        maxLength: 255
+        required: true
     },
     slug:{
         type:String,
-        required: true,
-        maxLength: 255
+        required: true
     },
     image: {
         type: String,
-        required: true,
-        default: default_image
+        required: true
     },
     content: {
         type: String,
@@ -29,7 +26,9 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     }
-});
+}, { timestamps: true });
+
+postSchema.plugin(mongooseAggregatePagination);
 
 const Post = mongoose.model("Post", postSchema);
 

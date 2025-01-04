@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {Schema} = require("mongoose");
+const Schema = mongoose.Schema;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -23,7 +23,6 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String,
-        requird: true
     }
 }, { timestamps: true });
 
@@ -64,4 +63,6 @@ userSchema.methods.generateRefreshToken = function(){
     )
 }
 
-export const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
