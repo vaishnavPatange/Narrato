@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 
 const userSchema = new Schema({
-    name: {
+    username: {
         type: String,
         required: true
     },
@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    userImage: {
+    avatar: {
         type: String,
         required: true
     },
@@ -21,6 +21,12 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    savedPosts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        }
+    ],
     refreshToken: {
         type: String,
     }

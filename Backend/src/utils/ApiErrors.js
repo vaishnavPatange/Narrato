@@ -13,3 +13,5 @@ class ApiErrors extends Error{
         this.success = false
     }
 }
+
+module.exports = ApiErrors;
