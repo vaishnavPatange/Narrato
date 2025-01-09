@@ -21,6 +21,15 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 
+// Routes
+const userRouter = require("./routes/user.routes.js");
+const healthCheckRouter = require("./routes/healthCheck.routes.js");
+
+
+app.use("/narrato/api/v1/user", userRouter);
+app.use("/narrato/api/v1/health-check", healthCheckRouter);
+
+
 connectDB()
 .then(() => {
 
@@ -33,5 +42,7 @@ connectDB()
   })
 
 });
+
+
 
 

@@ -2,14 +2,22 @@ const asyncHandler = require("../utils/asyncHandler.js");
 const ApiErrors = require("../utils/ApiErrors.js");
 const ApiResponse = require("../utils/ApiResoponse.js");
 const cloudinaryUpload = require("../utils/cloudinary.js");
-const User = require("../Model/user.js");
+const User = require("../model/user.model.js");
 const jwt = require("jsonwebtoken");
 
 const accessAndRefreshTokenGenerator = async(userId) => {
     try {
-        const user = User.findById(userId).select("-password -refreshToken");
+        console.log(userId);
+        
+        const user = await User.findById(userId).select("-password -refreshToken");
+
+        console.log(user);
+        
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
+
+        console.log(` 1: AccessToken: ${accessToken} \n refreshToken: ${refreshToken}`);
+        
 
         user.refreshToken = refreshToken;
         await user.save({ validaeBeforeSave: false });
@@ -17,7 +25,10 @@ const accessAndRefreshTokenGenerator = async(userId) => {
         return {accessToken, refreshToken};
 
     } catch (error) {
-        throw new ApiErrors(500, "Something went wrong while generating referesh and access token");
+        // throw new ApiErrors(500, "Something went wrong while generating referesh and access token");
+        console.log(error.message);
+        
+        throw error;
     }
 }
 
@@ -44,12 +55,16 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if(!cloudinaryResponse) throw new ApiErrors(500, "Something went wrong while uploading image");
 
-    const createdUser = await User.create({
+    const user = await User.create({
         username,
         email,
         password,
         avatar: cloudinaryResponse.url
-    }).select("-password");
+    });
+
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    );
 
     return res.status(201)
     .json( new ApiResponse(
@@ -75,7 +90,12 @@ const loginUser = asyncHandler( async (req, res) => {
     const isAuthenticated = await user.isPasswordCorrect(password);
     if(!isAuthenticated) throw new ApiErrors(401, "Unauthorized request");
 
+    console.log(user._id);
+    
+
     const { accessToken, refreshToken } = accessAndRefreshTokenGenerator(user._id);
+
+    console.log(` 2: AccessToken: ${accessToken} \n refreshToken: ${refreshToken}`);
 
     const loggedInUser = await User.findById(user._id)
                         .select("-password -refreshToken");
@@ -189,3 +209,67 @@ const changeCurrentPassword = asyncHandler( async(req, res)=>{
     ));
 
 });
+
+const updateAcountInfo = asyncHandler( async(req, res) => {
+    const {username, email} = req.body;
+    
+    if(!username || !email) throw new ApiErrors(400, "One of the field is neccessary");
+    
+    const isUsernameAndEmailAvailable = await User.findOne({
+        $or: [{username},{email}]
+    });
+    
+    if(isUsernameAndEmailAvailable) throw new ApiErrors(400, "Username or Email already exists");
+    
+    const updatedUser = await User.findByIdAndUpdate(req.user?._id,
+        {
+            $set: {
+                ...(username && {username}), // adds if username is truthy
+                ...(email && {email}) // adds if email is truthy
+            }
+        },
+        { new : true }
+    ).select("-password -refreshToken")
+    
+    return res.status(200)
+    .json( new ApiResoponse(
+        200,
+        updatedUser,
+        "Details updated successfully"
+    ));
+});
+
+const updateAvatar = asyncHandler( async(req, res) => {
+    const avatarLocalPath = req.file?.path;
+
+    if(!avatarLocalPath) throw new ApiErrors(400, "Avatar field is missing");
+
+    const newUrl = await cloudinaryUpload(avatarLocalPath);
+
+    const user = await User.findByIdAndUpdate(req.user?._id,
+        {
+            $set: { avatar: newUrl.url }
+        },
+        { new: true }
+    ).select("-password -refreshToken");
+
+    return res.status(200)
+    .json( new ApiResoponse(
+        200,
+        user.avatar,
+        "Avatar updated successfully"
+    ))
+
+});
+
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getUser,
+    logoutUser,
+    updateRefreshToken,
+    changeCurrentPassword,
+    updateAcountInfo,
+    updateAvatar
+}

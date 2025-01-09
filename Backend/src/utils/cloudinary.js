@@ -12,15 +12,18 @@ const cloudinaryUpload = async (localFilePath) => {
     try {
         if(!localFilePath) return null;
     
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            folder: "Narrato"
-        },{resource_type: "auto"});
+        const response = await cloudinary.uploader.upload(localFilePath,{resource_type: "auto"});
+
+        console.log(response);
+        
         
         fs.unlinkSync(localFilePath);
 
         return response;
     } catch (error) {
         fs.unlinkSync(localFilePath);
+        console.log("Error is : ", error.message);
+        
         return null;
     }
 
