@@ -7,16 +7,11 @@ const jwt = require("jsonwebtoken");
 
 const accessAndRefreshTokenGenerator = async(userId) => {
     try {
-        console.log(userId);
         
         const user = await User.findById(userId).select("-password -refreshToken");
-
-        console.log(user);
         
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
-
-        console.log(` 1: AccessToken: ${accessToken} \n refreshToken: ${refreshToken}`);
         
 
         user.refreshToken = refreshToken;
@@ -93,7 +88,7 @@ const loginUser = asyncHandler( async (req, res) => {
     console.log(user._id);
     
 
-    const { accessToken, refreshToken } = accessAndRefreshTokenGenerator(user._id);
+    const { accessToken, refreshToken } = await accessAndRefreshTokenGenerator(user._id);
 
     console.log(` 2: AccessToken: ${accessToken} \n refreshToken: ${refreshToken}`);
 
@@ -114,7 +109,7 @@ const loginUser = asyncHandler( async (req, res) => {
 // Secure controllers
 
 const getUser = asyncHandler( async(req, res) => {
-    return res.statu(200)
+    return res.status(200)
     .json( new ApiResponse(
         200,
         req.user,
@@ -123,7 +118,7 @@ const getUser = asyncHandler( async(req, res) => {
 });
 
 const logoutUser = asyncHandler( async(req, res) => {
-    const logedOut = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         req.user._id,
         {
             $unset: { refreshToken: 1 }
