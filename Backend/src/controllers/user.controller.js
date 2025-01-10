@@ -127,8 +127,8 @@ const logoutUser = asyncHandler( async(req, res) => {
     );
 
     return res.status(200)
-    .clearCookie(accessToken, cookieOpt)
-    .clearCookie(refreshToken, cookieOpt)
+    .clearCookie("accessToken", cookieOpt)
+    .clearCookie("refreshToken", cookieOpt)
     .json( new ApiResponse(
         200,
         {},
@@ -164,7 +164,7 @@ const updateRefreshToken = asyncHandler( async(req, res) => {
         throw new ApiErrors(401, "Unauthorized request")
     }
 
-    const { accessToken, refreshToken } = accessAndRefreshTokenGenerator(user._id);
+    const { accessToken, refreshToken } = await accessAndRefreshTokenGenerator(user._id);
 
     const loggedInUser = await User.findById(user._id)
                         .select("-password -refreshToken");
@@ -208,7 +208,7 @@ const changeCurrentPassword = asyncHandler( async(req, res)=>{
 const updateAcountInfo = asyncHandler( async(req, res) => {
     const {username, email} = req.body;
     
-    if(!username || !email) throw new ApiErrors(400, "One of the field is neccessary");
+    if(!(username || email)) throw new ApiErrors(400, "One of the field is neccessary");
     
     const isUsernameAndEmailAvailable = await User.findOne({
         $or: [{username},{email}]
@@ -227,7 +227,7 @@ const updateAcountInfo = asyncHandler( async(req, res) => {
     ).select("-password -refreshToken")
     
     return res.status(200)
-    .json( new ApiResoponse(
+    .json( new ApiResponse(
         200,
         updatedUser,
         "Details updated successfully"
@@ -249,7 +249,7 @@ const updateAvatar = asyncHandler( async(req, res) => {
     ).select("-password -refreshToken");
 
     return res.status(200)
-    .json( new ApiResoponse(
+    .json( new ApiResponse(
         200,
         user.avatar,
         "Avatar updated successfully"

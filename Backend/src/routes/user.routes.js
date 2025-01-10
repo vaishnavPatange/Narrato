@@ -23,7 +23,7 @@ router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/update-refresh-token").post(verifyJWT, updateRefreshToken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/update-details").post(verifyJWT, updateAcountInfo);
-router.route("/update-details").post(verifyJWT, upload.single("newAvatar"),updateAvatar);
+router.route("/update-avatar").post(verifyJWT, upload.single("newAvatar"),updateAvatar);
 
 
 module.exports = router;
