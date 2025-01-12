@@ -75,3 +75,30 @@ const addPost = asyncHandler( async(req, res) => {
     ));
 
 });
+
+const editPost = asyncHandler( async(req, res) => {
+    const {title, slug, content, status, _id} = req.body;
+
+    if( !title || !slug || !content || !status) throw new ApiErrors(400, "Nothing is edited");
+
+    const post = await Post.findOne({_id , user: req.user?._id});
+
+    if(!post) throw new ApiErrors(401, "You are not the owner of this post");
+
+    const updatedPost = await Post.findByIdAndUpdate(_id, {
+        $set: {
+            ...(title && {title}),
+            ...(slug && {slug}),
+            ...(content && {content}),
+            ...(status && {status})
+        }
+    } , { new : true });
+
+    return res.status(200)
+    .json( new ApiResponse(
+        200,
+        updatedPost,
+        "Post updated successfully"
+    ));
+
+})

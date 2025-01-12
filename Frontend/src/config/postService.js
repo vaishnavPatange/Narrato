@@ -30,7 +30,7 @@ export class PostService{
         }
     }
 
-    async editPost({ title, slug, image, content, status, _id }){
+    async editPost({ title, slug, content, status, _id }){
         try {
             const editedPost = await axios.put(`${conf.expressUrl}/post/edit/:${_id}`, {
                 title:title,
